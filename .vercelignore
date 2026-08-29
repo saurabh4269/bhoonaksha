@@ -1,0 +1,4 @@
+data/
+bin-cloudflared
+*.zip
+*.7z

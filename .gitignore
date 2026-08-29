@@ -1,0 +1,9 @@
+.vercel
+bin-cloudflared
+data/*.sqlite
+data/*.sqlite-*
+*.zip
+*.7z
+.env
+.env.*
+ref/

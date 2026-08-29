@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1" />
+  <title>Bhoonaksha</title>
+  <meta name="description" content="India land map. Tap your field." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Sans+Tamil:wght@400;600;700&family=Noto+Sans+Telugu:wght@400;600;700&family=Noto+Sans+Kannada:wght@400;600;700&family=Noto+Sans+Malayalam:wght@400;600;700&family=Noto+Sans+Gujarati:wght@400;600;700&family=Noto+Sans+Gurmukhi:wght@400;600;700&family=Noto+Sans+Oriya:wght@400;600;700&family=Noto+Naskh+Arabic:wght@400;700&family=Noto+Sans+Ol+Chiki:wght@400;700&family=Noto+Sans+Meetei+Mayek:wght@400;700&family=Noto+Serif:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet" />
+  <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/app.css?v=40" />
+</head>
+<body>
+  <div id="map"></div>
+  <div id="compare-handle" hidden role="slider" aria-orientation="horizontal" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50" aria-label="Compare">
+    <div class="compare-line"></div>
+    <div class="compare-grab" aria-hidden="true"><span>‹</span><span>›</span></div>
+  </div>
+
+  <header class="top">
+    <div class="brand">
+      <p class="name">Bhoonaksha</p>
+    </div>
+    <div class="top-actions">
+      <button type="button" id="btn-search" class="chip icon-chip" aria-label="Search" title="Search" data-i18n-aria="search">
+        <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
+          <circle cx="11" cy="11" r="6.25"/>
+          <path d="M16.2 16.2L21 21"/>
+        </svg>
+      </button>
+      <div class="lang-wrap">
+        <button type="button" id="btn-lang" class="chip" aria-haspopup="listbox" aria-expanded="false">EN</button>
+        <ul id="lang-menu" class="lang-menu" hidden role="listbox"></ul>
+      </div>
+      <a class="chip ghost" href="lekpal.html" data-i18n="desk">Lekhpal desk</a>
+    </div>
+  </header>
+
+  <form class="search" id="search-form" autocomplete="off" hidden>
+    <div class="search-row">
+      <input id="q" name="q" type="search" inputmode="search" enterkeyhint="search" autocapitalize="none" autocorrect="off" spellcheck="false" autocomplete="off" data-i18n-placeholder="searchPh" placeholder="Village, city, plot, or DIGIPIN" />
+      <button type="button" id="btn-search-close" class="search-x" aria-label="Close">×</button>
+    </div>
+    <div class="plot-pick" id="plot-pick-wrap" hidden>
+      <label for="plot-pick" data-i18n="plotPick">Plot in view</label>
+      <select id="plot-pick"></select>
+    </div>
+    <ul id="suggest" class="suggest" hidden></ul>
+  </form>
+
+
+  <div class="basemap-bar">
+    <div class="basemap-switch" role="group" aria-label="Map or satellite">
+      <button type="button" id="ly-map" class="on" data-i18n="basemapMap">Map</button>
+      <button type="button" id="ly-sat" data-i18n="basemapSat">Satellite</button>
+    </div>
+    <button type="button" id="ly-labels" class="labels-chip on" data-i18n="labels" aria-pressed="true">Labels</button>
+    <label class="sat-year" id="sat-year-wrap" hidden>
+      <span class="sat-year-lab"><span data-i18n="photoYear">Photo year</span> <span id="sat-year-val">2026</span></span>
+      <input type="range" id="sat-year" min="2014" max="2026" value="2026" step="1" />
+    </label>
+  </div>
+  <div id="area-legend" class="area-legend" hidden>
+    <span class="al-s" data-i18n="areaSmall">Smaller</span>
+    <span class="al-m" data-i18n="areaMid">Mid</span>
+    <span class="al-l" data-i18n="areaLarge">Larger</span>
+  </div>
+  <div class="map-corner">
+    <button type="button" id="btn-india" class="india-btn" data-i18n="seeIndia">See India</button>
+    <button type="button" id="btn-locate" class="corner-chip" aria-label="My location" title="My location" data-i18n-aria="myLocation" data-i18n-title="myLocation">
+      <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M12 3v3.2M12 17.8V21M3 12h3.2M17.8 12H21"/>
+      </svg>
+    </button>
+    <button type="button" id="btn-measure" class="corner-chip" aria-label="Measure" title="Measure" data-i18n-aria="measure" data-i18n-title="measure">
+      <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
+        <path d="M5 16 L16 5 L19 8 L8 19 Z"/>
+        <path d="M7.2 13.8 L8.6 15.2M9.4 11.6 L10.8 13M11.6 9.4 L13 10.8M13.8 7.2 L15.2 8.6"/>
+      </svg>
+    </button>
+    <button type="button" id="btn-measure-trash" class="corner-chip" hidden aria-label="Clear" title="Clear" data-i18n-aria="measureClear" data-i18n-title="measureClear">
+      <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
+        <path d="M9 5h6M5 8h14M8 8l.8 12h6.4L16 8M10 11v6M14 11v6"/>
+      </svg>
+    </button>
+    <div class="tools-wrap">
+      <button type="button" id="btn-tools" class="corner-chip" aria-label="Tools" title="Tools" aria-haspopup="true" aria-expanded="false" data-i18n-aria="tools" data-i18n-title="tools">
+        <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
+          <path d="M5 7h14M5 12h14M5 17h14"/>
+        </svg>
+      </button>
+      <div id="tools-menu" class="tools-menu" hidden>
+        <button type="button" id="ly-terrain" class="tools-tile" aria-pressed="false" data-i18n-title="terrain">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 19l6.2-9 3.4 4.8 2.5-3.3L21 19H3z"/></svg>
+          <span data-i18n="terrain">Terrain</span>
+        </button>
+        <button type="button" id="ly-compare" class="tools-tile" aria-pressed="false" data-i18n-title="compare">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="7" height="14" rx="1"/><rect x="13" y="5" width="7" height="14" rx="1"/><path d="M12 4v16"/></svg>
+          <span data-i18n="compare">Compare</span>
+        </button>
+        <div class="tools-sep"></div>
+        <button type="button" id="ly-verts" class="tools-tile" data-i18n-title="vertices">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5l7.5 13H4.5L12 5z"/><circle cx="12" cy="5" r="1.4"/><circle cx="4.5" cy="18" r="1.4"/><circle cx="19.5" cy="18" r="1.4"/></svg>
+          <span data-i18n="vertices">Vertices</span>
+        </button>
+        <button type="button" id="ly-border" class="tools-tile" data-i18n-title="borderLen">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 18.5V7l6-3 6 4v10.5l-6 3-6-3.5z"/></svg>
+          <span data-i18n="borderLen">Border</span>
+        </button>
+        <button type="button" id="ly-area" class="tools-tile" data-i18n-title="areaTheme">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19h7V10H4z"/><path d="M13 19h7V5h-7z"/></svg>
+          <span data-i18n="areaTheme">Size</span>
+        </button>
+        <div class="tools-sep"></div>
+        <button type="button" class="tools-hint" data-coming="1" data-i18n="toolRor">Record of Rights</button>
+      </div>
+    </div>
+  </div>
+  <p class="map-credit">Tiles © Esri</p>
+
+  <aside id="sheet" class="inspector" hidden>
+    <div class="ins-head" id="sheet-head">
+      <div class="ins-head-text">
+        <p class="kicker" id="sheet-kicker"></p>
+        <h2 id="sheet-title"></h2>
+      </div>
+      <div class="ins-head-actions">
+        <button type="button" id="sheet-min" class="ins-icon" aria-label="Minimize" title="Minimize">▾</button>
+        <button type="button" id="sheet-close" class="ins-icon" aria-label="Close" title="Close">×</button>
+      </div>
+    </div>
+    <div class="ins-main" id="sheet-main">
+      <p class="trust" id="sheet-trust"></p>
+      <p class="pass-banner" id="pass-banner" hidden></p>
+      <dl id="sheet-dl" class="facts"></dl>
+      <p class="pass-source" id="pass-source" hidden></p>
+      <p class="note" id="sheet-note" hidden></p>
+      <div class="actions">
+        <button type="button" class="btn" id="btn-measure-clear" hidden data-i18n="measureClear">Clear</button>
+        <button type="button" class="btn primary" id="btn-copy" data-i18n="mapCopy">Get map copy</button>
+        <button type="button" class="btn" id="btn-bank" data-i18n="sendBank">Send to bank</button>
+        <button type="button" class="btn danger" id="btn-wrong" data-i18n="looksWrong">This looks wrong</button>
+      </div>
+      <p class="pass-links" id="pass-links" hidden>
+        <a id="dir-link" class="pass-ror" hidden target="_blank" rel="noopener noreferrer"></a>
+        <a id="ror-link" class="pass-ror" hidden target="_blank" rel="noopener noreferrer"></a>
+        <span id="ror-mute" class="pass-mute" hidden></span>
+        <button type="button" id="btn-demo-ror" class="pass-demo" hidden></button>
+      </p>
+    </div>
+  </aside>
+  <p class="toast" id="toast" hidden></p>
+
+
+  <p id="scale-ratio" class="scale-ratio">1 : —</p>
+  <p id="print-meta" class="print-meta"></p>
+  <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+  <script src="js/i18n.js?v=40"></script>
+  <script src="js/map-lang.js?v=40"></script>
+  <script src="js/plot-ux.js?v=40"></script>
+  <script src="js/passport.js?v=40"></script>
+  <script src="js/lgd.js?v=40"></script>
+  <script src="js/digipin.js?v=40"></script>
+  <script src="js/swipe.js?v=40"></script>
+  <script src="js/app.js?v=40"></script>
+</body>
+</html>

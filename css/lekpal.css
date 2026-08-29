@@ -1,0 +1,176 @@
+body.desk .search { top: 14px; z-index: 45; }
+
+.tools {
+  position: absolute;
+  top: auto;
+  bottom: 78px;
+  left: 14px;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 2px;
+  width: 40px;
+  pointer-events: auto;
+  background: rgba(255, 253, 248, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+  padding: 5px;
+}
+.tools svg {
+  width: 24px;
+  height: 24px;
+  overflow: visible;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
+}
+.tools button, .file-btn {
+  position: relative;
+  font: 600 12px/1 var(--sans);
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border-radius: 9px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none;
+}
+.tools button.on, .file-btn.on { background: var(--ink); color: var(--paper); }
+.file-btn { display: flex; }
+.tool-gap {
+  height: 1px;
+  margin: 3px 6px;
+  background: var(--line);
+  pointer-events: none;
+}
+.tool-label { display: none !important; }
+
+.inspector {
+  position: absolute;
+  top: 88px;
+  right: 14px;
+  width: min(320px, calc(100% - 28px));
+  z-index: 8;
+  background: rgba(255, 253, 248, 0.78);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 0;
+  max-height: calc(100vh - 32px);
+  overflow: hidden;
+}
+.inspector[hidden] { display: none !important; }
+.ins-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 6px 8px 14px;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+.ins-head:active { cursor: grabbing; }
+.ins-head-text { min-width: 0; flex: 1; }
+.ins-head-text .kicker { margin: 0 0 2px; }
+.ins-head-text h2 { font-size: 18px; margin: 0; line-height: 1.25; }
+.ins-head-actions { display: flex; gap: 0; flex-shrink: 0; }
+.ins-icon {
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.ins-icon:hover { background: rgba(28, 24, 20, 0.08); }
+.ins-main {
+  padding: 0 14px 14px;
+  overflow: auto;
+  max-height: min(58vh, 520px);
+}
+.inspector.min .ins-main { display: none; }
+.inspector.min { max-height: none; }
+body.desk .area-legend { bottom: 164px; }
+body.desk .disclaimer { left: 50%; transform: translateX(-50%); }
+
+@media (max-width: 720px) {
+  .tools {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    width: auto;
+    max-width: calc(100% - 28px);
+    top: auto;
+    bottom: 70px;
+    left: 14px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .tool-gap { width: 1px; height: auto; margin: 6px 2px; }
+  .tools button, .file-btn { width: 32px; height: 32px; min-width: 32px; }
+  .inspector {
+    top: auto;
+    right: 12px;
+    left: auto;
+    width: min(280px, calc(100% - 24px));
+    max-height: 42vh;
+  }
+}
+@media print {
+  .tools { display: none !important; }
+}
+
+.catalog {
+  position: absolute;
+  left: 58px;
+  bottom: 78px;
+  z-index: 7;
+  width: min(200px, calc(100% - 80px));
+  background: rgba(255, 253, 248, 0.92);
+  backdrop-filter: blur(14px);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  padding: 10px 12px 12px;
+}
+.catalog[hidden] { display: none !important; }
+.catalog-title {
+  margin: 0 0 8px;
+  font: 650 12px/1.2 var(--sans);
+}
+.catalog label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: 500 13px/1.4 var(--sans);
+  padding: 3px 0;
+  cursor: pointer;
+}
+@media (max-width: 720px) {
+  .catalog { left: 14px; bottom: 118px; }
+}
+
+.catalog-states {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px 8px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+.catalog-states label { font-size: 12px; }
+body.desk .scale-ratio { left: 120px; bottom: 8px; }
