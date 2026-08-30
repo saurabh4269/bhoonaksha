@@ -114,6 +114,37 @@
     return (stateName && OFFICIAL[stateName]) || "";
   }
 
+  function wantFamilyStory() {
+    try {
+      const q = new URLSearchParams(location.search);
+      if (q.get("story") === "family" || q.get("demo") === "family") return true;
+    } catch (e) {}
+    return false;
+  }
+
+  function showFamilyStory(view) {
+    if (wantFamilyStory()) return true;
+    return !!(view && view.state === "Jharkhand");
+  }
+
+  function familyStoryHtml() {
+    return (
+      '<div class="land-story">' +
+        "<dt>" + escapeHtml(tr("familyLand", "Our family's land")) + "</dt>" +
+        "<dd>" +
+          '<span class="beat">' +
+            '<span class="when">' + escapeHtml(tr("then", "Then")) + "</span>" +
+            '<span class="val">' + escapeHtml(tr("raiyati", "Raiyati")) + "</span>" +
+          "</span>" +
+          '<span class="beat now">' +
+            '<span class="when">' + escapeHtml(tr("today", "Today")) + "</span>" +
+            '<span class="val">' + escapeHtml(tr("gairMazarua", "Gair Mazarua")) + "</span>" +
+          "</span>" +
+        "</dd>" +
+      "</div>"
+    );
+  }
+
   function fromFeat(feat, ll) {
     const p = (feat && feat.properties) || {};
     const ux = window.PlotUX;
@@ -200,6 +231,7 @@
       parts.push(rowHtml(tr("state", "State"), view.state));
       parts.push(rowHtml(tr("area", "Area"), view.area));
       parts.push(rowHtml(tr("digipin", "DIGIPIN"), view.digipin));
+      if (showFamilyStory(view)) parts.push(familyStoryHtml());
       parts.push(rowHtml(tr("khata", "Khata"), view.khata));
       parts.push(rowHtml(tr("holder", "Holder"), view.holder));
       parts.push(rowHtml(tr("kisam", "Kisam"), view.kisam));
@@ -208,8 +240,13 @@
       e.dl.classList.add("passport");
     }
     if (e.source) {
-      e.source.hidden = true;
-      e.source.textContent = "";
+      if (showFamilyStory(view)) {
+        e.source.hidden = false;
+        e.source.textContent = tr("familyLandNote", "Family account — not a live Record of Rights.");
+      } else {
+        e.source.hidden = true;
+        e.source.textContent = "";
+      }
     }
     if (e.banner) {
       if (demoOn) {
