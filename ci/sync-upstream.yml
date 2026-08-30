@@ -1,0 +1,22 @@
+# Runs only on forks. Fast-forwards main from saurabh4269/bhoonaksha so
+# the Vercel Git connection on the fork picks up origin pushes.
+name: Sync upstream
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+jobs:
+  sync:
+    if: github.repository != 'saurabh4269/bhoonaksha'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Merge upstream main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh api -X POST "repos/${GH_REPO}/merge-upstream" -f branch=main
