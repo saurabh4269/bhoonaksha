@@ -127,20 +127,12 @@
     return !!(view && view.state === "Jharkhand");
   }
 
-  function familyStoryHtml() {
+  function familyStoryRows() {
     return (
-      '<div class="land-story">' +
-        "<dt>" + escapeHtml(tr("familyLand", "Our family's land")) + "</dt>" +
-        "<dd>" +
-          '<span class="beat">' +
-            '<span class="when">' + escapeHtml(tr("then", "Then")) + "</span>" +
-            '<span class="val">' + escapeHtml(tr("raiyati", "Raiyati")) + "</span>" +
-          "</span>" +
-          '<span class="beat now">' +
-            '<span class="when">' + escapeHtml(tr("today", "Today")) + "</span>" +
-            '<span class="val">' + escapeHtml(tr("gairMazarua", "Gair Mazarua")) + "</span>" +
-          "</span>" +
-        "</dd>" +
+      rowHtml(tr("then", "Then"), tr("raiyati", "Raiyati")) +
+      "<div class=\"land-now\">" +
+        "<dt>" + escapeHtml(tr("today", "Today")) + "</dt>" +
+        "<dd>" + escapeHtml(tr("gairMazarua", "Gair Mazarua")) + "</dd>" +
       "</div>"
     );
   }
@@ -231,7 +223,7 @@
       parts.push(rowHtml(tr("state", "State"), view.state));
       parts.push(rowHtml(tr("area", "Area"), view.area));
       parts.push(rowHtml(tr("digipin", "DIGIPIN"), view.digipin));
-      if (showFamilyStory(view)) parts.push(familyStoryHtml());
+      if (showFamilyStory(view)) parts.push(familyStoryRows());
       parts.push(rowHtml(tr("khata", "Khata"), view.khata));
       parts.push(rowHtml(tr("holder", "Holder"), view.holder));
       parts.push(rowHtml(tr("kisam", "Kisam"), view.kisam));
@@ -242,7 +234,7 @@
     if (e.source) {
       if (showFamilyStory(view)) {
         e.source.hidden = false;
-        e.source.textContent = tr("familyLandNote", "Family account — not a live Record of Rights.");
+        e.source.textContent = tr("familyLandNote", "Our family's land — not a live Record of Rights.");
       } else {
         e.source.hidden = true;
         e.source.textContent = "";

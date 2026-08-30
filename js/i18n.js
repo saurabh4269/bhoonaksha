@@ -131,7 +131,7 @@ window.I18N = {
     today: "Today",
     raiyati: "Raiyati",
     gairMazarua: "Gair Mazarua",
-    familyLandNote: "Family account — not a live Record of Rights."
+    familyLandNote: "Our family's land — not a live Record of Rights."
   },
   as: {
     searchPh: "গাঁও, চহৰ, বা ডিআইজিপিন",

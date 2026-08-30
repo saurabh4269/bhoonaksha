@@ -470,36 +470,7 @@ h2 { font-family: var(--serif); font-size: 26px; margin: 0 0 6px; }
 }
 .facts.passport { margin-bottom: 8px; }
 .facts.passport div.empty dd { color: var(--ink-soft); font-weight: 500; }
-.facts .land-story { grid-column: 1 / -1; }
-.facts .land-story dd {
-  display: flex;
-  gap: 22px;
-  flex-wrap: wrap;
-  margin-top: 6px;
-  font-weight: 600;
-}
-.facts .land-story .beat {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 8.5em;
-}
-.facts .land-story .when {
-  font-size: 11px;
-  color: var(--ink-soft);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  font-weight: 500;
-}
-.facts .land-story .val {
-  font-family: var(--serif);
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
-  color: var(--ink);
-}
-.facts .land-story .beat.now .val { color: var(--accent); }
+.facts .land-now dd { color: var(--accent); }
 .pass-links {
   display: flex;
   flex-wrap: wrap;
