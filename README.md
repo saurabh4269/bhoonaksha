@@ -4,6 +4,11 @@ Static web map for Indian cadastral plots. No bundler, no framework.
 
 Live: https://bhunaksha.vercel.app
 
+![Bhoonaksha container architecture](docs/architecture/runtime.png)
+
+Browser SPA (MapLibre + IIFEs) loads static HTML/CSS/JS from Vercel, then pulls raster/vector tiles and MVT from open APIs. The only server call is `POST /api/translate.js` (`SARVAM_API_KEY` stays on the host); RoR is an outbound link, not a scrape.
+
+
 ## Stack
 
 | Piece | What |
@@ -41,18 +46,6 @@ vercel.json         cache headers
 ```
 
 Cache-bust query is `?v=` on script and CSS links. Bump it when shipping.
-
-## Architecture
-
-How the live app is wired, then how this tree was built and shipped.
-
-![Bhoonaksha runtime](docs/architecture/runtime.png)
-
-Left to right: two pages on Vercel, MapLibre in the browser, open tiles/APIs. Translation strip is the only server call (`api/translate.js` → Sarvam). RoR is a door, not a database.
-
-![How Bhoonaksha was built](docs/architecture/build.png)
-
-Who → this tree (plain HTML/CSS/JS) → open tiles and UX refs (not their data) → `npx vercel --prod` and `saurabh4269/bhoonaksha`.
 
 ## Cadastral tiles
 
