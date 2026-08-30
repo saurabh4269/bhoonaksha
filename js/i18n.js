@@ -1294,7 +1294,22 @@ window.readShareParam = function (key) {
   try { return new URLSearchParams(location.search).get(key); }
   catch (e) { return null; }
 };
-window.shareHashAtBoot = /^\d+(\.\d+)?\/-?\d+(\.\d+)?\/-?\d+/.test(String(location.hash || "").replace(/^#/, ""));
+(function sanitizeMapHash() {
+  const raw = String(location.hash || "").replace(/^#/, "");
+  if (!raw) {
+    window.shareHashAtBoot = false;
+    return;
+  }
+  const parts = raw.split("/");
+  const nums = parts.slice(0, 3).map(Number);
+  const ok = nums.length >= 3 && nums.every(function (n) { return Number.isFinite(n); });
+  if (!ok) {
+    try { history.replaceState(history.state, "", location.pathname + location.search); } catch (e) {}
+    window.shareHashAtBoot = false;
+    return;
+  }
+  window.shareHashAtBoot = true;
+})();
 window.setLang = function (id) {
   const known = (window.LANGS || []).some(function (l) { return l.id === id; });
   window.__lang = known ? id : "en";

@@ -15,6 +15,15 @@
 
 * { box-sizing: border-box; }
 html, body { height: 100%; margin: 0; }
+html.booting #map { opacity: 0; }
+html.ready #map {
+  opacity: 1;
+  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+html.leaving body {
+  opacity: 0;
+  transition: opacity 0.22s ease;
+}
 body {
   font-family: var(--sans);
   color: var(--ink);

@@ -412,6 +412,7 @@
   function closeInspector() {
     const el = document.getElementById("inspector");
     if (el) el.hidden = true;
+    if (window.writeShareParams) window.writeShareParams({ plot: "", plat: "", plng: "" });
   }
   function toggleMinInspector() {
     const el = document.getElementById("inspector");
@@ -899,6 +900,13 @@
       if (window.PlotUX) window.PlotUX.setHighlight(map, surveyHits[0]);
       refreshPlotExtras();
       const pass = window.Passport ? window.Passport.fromFeat(surveyHits[0], { lat: lat, lng: lng }) : null;
+      if (window.writeShareParams) {
+        window.writeShareParams({
+          plot: sn || "1",
+          plat: Number(lat).toFixed(6),
+          plng: Number(lng).toFixed(6)
+        });
+      }
       inspect(t().identify || "Identify", sn ? ((t().surveyNo || "Survey no.") + " " + sn) : (t().point || "This plot"),
         [v, p.m_name, p.d_name].filter(Boolean).join(", ") || (t().sourceSurvey || "Survey outline"),
         rows,
@@ -1508,7 +1516,7 @@
     state.lastFeat = plot.feat;
     if (window.PlotUX) {
       window.PlotUX.setHighlight(map, plot.feat);
-      window.PlotUX.flyToFeat(map, plot.feat);
+      if (!plot.silent) window.PlotUX.flyToFeat(map, plot.feat);
     }
     const p = plot.feat.properties || {};
     const sn = (window.PlotUX && window.PlotUX.surveyNumber) ? window.PlotUX.surveyNumber(p) : surveyNumber(p);
@@ -1529,6 +1537,13 @@
     }
     /* no source row */
     const pass = window.Passport ? window.Passport.fromFeat(plot.feat, { lat: lat, lng: lng }) : null;
+    if (lat && window.writeShareParams) {
+      window.writeShareParams({
+        plot: sn || "1",
+        plat: Number(lat).toFixed(6),
+        plng: Number(lng).toFixed(6)
+      });
+    }
     if (lat) placeMarker({ lng: lng, lat: lat });
     inspect(t().identify || "Identify", sn ? ((t().surveyNo || "Survey no.") + " " + sn) : (t().point || "This plot"),
       [v, p.m_name, p.d_name].filter(Boolean).join(", ") || (t().sourceSurvey || "Survey outline"),
@@ -1569,27 +1584,100 @@
     pickPlot(plots[i]);
   });
 
-    map.on("load", () => {
-    if (window.PlotUX) window.PlotUX.ensureOverlays(map);
-    if (window.readShareParam && window.readShareParam("sat") === "1") setSatellite(true);
-    if (window.readShareParam && window.readShareParam("compare") === "1") setCompare(true);
-    if (window.readShareParam) {
-      const y0 = Number(window.readShareParam("year"));
-      if (y0 >= 2014 && y0 <= 2026) setSatYear(y0);
+  async function bootCamera() {
+    const gpsP = gpsFix();
+    const ipP = ipFix();
+    let revealed = false;
+    function show(loc, ease) {
+      if (!loc) return;
+      state.lastLocate = loc;
+      loadNearbyVillages(loc.lat, loc.lng);
+      const cam = { center: [loc.lng, loc.lat], zoom: loc.zoom };
+      try { map.stop(); } catch (e) {}
+      if (ease) map.easeTo(Object.assign({ duration: 900, essential: true }, cam));
+      else map.jumpTo(cam);
+      if (typeof placeMe === "function" && loc.source === "gps") placeMe({ lng: loc.lng, lat: loc.lat });
     }
-    if (state.labels === false && window.applyStreetVisibility) {
-      window.applyStreetVisibility(map, state.satellite, false, state.compare);
+    function reveal() {
+      if (revealed) return;
+      revealed = true;
+      if (window.revealMap) window.revealMap();
+      else {
+        document.documentElement.classList.remove("booting");
+        document.documentElement.classList.add("ready");
+      }
     }
-    if (window.attachOpenFreeMap) {
-      window.attachOpenFreeMap(map, {
-        getLang: () => state.lang,
-        getSatellite: () => state.satellite,
-        getLabels: () => state.labels !== false,
-        getCompare: () => !!state.compare
-      });
+    window.setTimeout(reveal, 2200);
+    try {
+      const ip = await ipP;
+      if (!state.userMoved) show(chooseFix(null, ip, { initial: true }), false);
+    } catch (e) {}
+    reveal();
+    try {
+      const gps = await gpsP;
+      const loc = chooseFix(gps, null, { initial: true });
+      if (loc && loc.source === "gps" && !state.userMoved) {
+        show(loc, true);
+        if (typeof placeMe === "function") placeMe({ lng: loc.lng, lat: loc.lat });
+      }
+    } catch (e2) {}
+  }
+
+  function restorePlotFromShare() {
+    const plat = Number(window.readShareParam && window.readShareParam("plat"));
+    const plng = Number(window.readShareParam && window.readShareParam("plng"));
+    if (!Number.isFinite(plat) || !Number.isFinite(plng)) return;
+    const go = function () {
+      try {
+        const pt = map.project({ lng: plng, lat: plat });
+        const hits = queryLayers(pt, SURVEY_FILL);
+        if (hits[0]) pickPlot({ feat: hits[0], lngLat: [plng, plat], silent: true });
+      } catch (e) {}
+    };
+    map.once("idle", go);
+    window.setTimeout(go, 2000);
+  }
+
+  map.on("load", () => {
+    const finishBoot = function () {
+      if (window.revealMap) window.revealMap();
+      else {
+        document.documentElement.classList.remove("booting");
+        document.documentElement.classList.add("ready");
+      }
+      window.setTimeout(function () {
+        if (window.attachOpenFreeMap) {
+          window.attachOpenFreeMap(map, {
+            getLang: () => state.lang,
+            getSatellite: () => state.satellite,
+            getLabels: () => state.labels !== false,
+            getCompare: () => !!state.compare
+          });
+        }
+        restorePlotFromShare();
+      }, 500);
+      refreshPlotPicker();
+    };
+    try {
+      if (window.PlotUX) window.PlotUX.ensureOverlays(map);
+      if (window.readShareParam && window.readShareParam("sat") === "1") setSatellite(true);
+      if (window.readShareParam && window.readShareParam("compare") === "1") setCompare(true);
+      if (window.readShareParam) {
+        const y0 = Number(window.readShareParam("year"));
+        if (y0 >= 2014 && y0 <= 2026) setSatYear(y0);
+      }
+      if (state.labels === false && window.applyStreetVisibility) {
+        window.applyStreetVisibility(map, state.satellite, false, state.compare);
+      }
+    } catch (e) {
+      console.warn("map load setup", e);
+    } finally {
+      if (window.shareHashAtBoot) finishBoot();
+      else bootCamera().then(finishBoot).catch(finishBoot);
     }
-    runLocate({ initial: true });
-    refreshPlotPicker();
+  });
+  map.once("error", function () {
+    if (window.revealMap) window.revealMap();
   });
   map.on("moveend", () => {
     refreshPlotPicker();

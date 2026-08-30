@@ -574,6 +574,7 @@
   function closeSheet() {
     const el = document.getElementById("sheet");
     if (el) el.hidden = true;
+    if (window.writeShareParams) window.writeShareParams({ plot: "", plat: "", plng: "" });
   }
   function wireSheetDrag() {
     const el = document.getElementById("sheet");
@@ -713,6 +714,13 @@
       state.selFeat = feat;
       if (window.PlotUX) window.PlotUX.setHighlight(map, feat);
       refreshPlotExtras();
+      if (window.writeShareParams) {
+        window.writeShareParams({
+          plot: sn || "1",
+          plat: Number(lat).toFixed(6),
+          plng: Number(lon).toFixed(6)
+        });
+      }
       showSheet({
         title: sn ? (dict.surveyNo + " " + sn) : vname,
         where: [feat.properties.v_name, feat.properties.m_name, feat.properties.d_name].filter(Boolean).join(", "),
@@ -839,28 +847,101 @@
     }
   }
 
+  async function bootCamera() {
+    const gpsP = gpsFix();
+    const ipP = ipFix();
+    let revealed = false;
+    function show(loc, ease) {
+      if (!loc) return;
+      state.lastLocate = loc;
+      loadNearbyVillages(loc.lat, loc.lng);
+      const cam = { center: [loc.lng, loc.lat], zoom: loc.zoom };
+      try { map.stop(); } catch (e) {}
+      if (ease) map.easeTo(Object.assign({ duration: 900, essential: true }, cam));
+      else map.jumpTo(cam);
+      if (typeof placeMe === "function" && loc.source === "gps") placeMe({ lng: loc.lng, lat: loc.lat });
+    }
+    function reveal() {
+      if (revealed) return;
+      revealed = true;
+      if (window.revealMap) window.revealMap();
+      else {
+        document.documentElement.classList.remove("booting");
+        document.documentElement.classList.add("ready");
+      }
+    }
+    window.setTimeout(reveal, 2200);
+    try {
+      const ip = await ipP;
+      if (!state.userMoved) show(chooseFix(null, ip, { initial: true }), false);
+    } catch (e) {}
+    reveal();
+    try {
+      const gps = await gpsP;
+      const loc = chooseFix(gps, null, { initial: true });
+      if (loc && loc.source === "gps" && !state.userMoved) {
+        show(loc, true);
+        if (typeof placeMe === "function") placeMe({ lng: loc.lng, lat: loc.lat });
+      }
+    } catch (e2) {}
+  }
+
+  function restorePlotFromShare() {
+    const plat = Number(window.readShareParam && window.readShareParam("plat"));
+    const plng = Number(window.readShareParam && window.readShareParam("plng"));
+    if (!Number.isFinite(plat) || !Number.isFinite(plng)) return;
+    const go = function () {
+      try {
+        const pt = map.project({ lng: plng, lat: plat });
+        const hits = queryLayers(pt, SURVEY_FILL);
+        if (hits[0]) inspectPoint({ lng: plng, lat: plat }, hits[0], false);
+      } catch (e) {}
+    };
+    map.once("idle", go);
+    window.setTimeout(go, 2000);
+  }
+
   map.on("load", () => {
-    applyLang();
-    if (window.PlotUX) window.PlotUX.ensureOverlays(map);
-    if (window.readShareParam && window.readShareParam("sat") === "1") setSatellite(true);
-    if (window.readShareParam && window.readShareParam("compare") === "1") setCompare(true);
-    if (window.readShareParam) {
-      const y0 = Number(window.readShareParam("year"));
-      if (y0 >= 2014 && y0 <= 2026) setSatYear(y0);
+    const finishBoot = function () {
+      if (window.revealMap) window.revealMap();
+      else {
+        document.documentElement.classList.remove("booting");
+        document.documentElement.classList.add("ready");
+      }
+      window.setTimeout(function () {
+        if (window.attachOpenFreeMap) {
+          window.attachOpenFreeMap(map, {
+            getLang: () => state.lang,
+            getSatellite: () => state.satellite,
+            getLabels: () => state.labels !== false,
+            getCompare: () => !!state.compare
+          });
+        }
+        restorePlotFromShare();
+      }, 500);
+      refreshPlotPicker();
+    };
+    try {
+      applyLang();
+      if (window.PlotUX) window.PlotUX.ensureOverlays(map);
+      if (window.readShareParam && window.readShareParam("sat") === "1") setSatellite(true);
+      if (window.readShareParam && window.readShareParam("compare") === "1") setCompare(true);
+      if (window.readShareParam) {
+        const y0 = Number(window.readShareParam("year"));
+        if (y0 >= 2014 && y0 <= 2026) setSatYear(y0);
+      }
+      if (state.labels === false && window.applyStreetVisibility) {
+        window.applyStreetVisibility(map, state.satellite, false, state.compare);
+      }
+    } catch (e) {
+      console.warn("map load setup", e);
+    } finally {
+      if (window.shareHashAtBoot) finishBoot();
+      else bootCamera().then(finishBoot).catch(finishBoot);
     }
-    if (state.labels === false && window.applyStreetVisibility) {
-      window.applyStreetVisibility(map, state.satellite, false, state.compare);
-    }
-    if (window.attachOpenFreeMap) {
-      window.attachOpenFreeMap(map, {
-        getLang: () => state.lang,
-        getSatellite: () => state.satellite,
-        getLabels: () => state.labels !== false,
-        getCompare: () => !!state.compare
-      });
-    }
-    runLocate({ initial: true, marker: true });
-    refreshPlotPicker();
+  });
+  map.once("error", function () {
+    if (window.revealMap) window.revealMap();
   });
 
   function liveLayers(ids) {
