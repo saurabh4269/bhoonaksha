@@ -1,0 +1,207 @@
+{
+  "project": "Bhoonaksha 60-second hackathon demo stills",
+  "captured_at": "2026-08-30T06:13:00.000Z",
+  "viewport": {
+    "width": 1920,
+    "height": 1080,
+    "aspect": "16:9"
+  },
+  "method": "Playwright Chromium, page screenshot only \u2014 no browser chrome, no OS chrome, no cursor.",
+  "notes": "Bhoonaksha frames are live captures from https://bhunaksha.vercel.app/. Government Jharbhoomi forms could not be loaded from this capture environment (TCP to 103.97.108.122:443 connects; TLS handshake times out; WebFetch returns HTTP 500). Those two stills were not fabricated.",
+  "location_used": {
+    "place": "Mandar area, west of Ranchi, Jharkhand",
+    "approx": {
+      "lat": 23.4535,
+      "lng": 85.0997,
+      "zoom": 16.8
+    },
+    "why": "Live JSAC cadastral tiles are present here. Rural fields and a national highway give geographic context for the family story without inventing a plot."
+  },
+  "priority_six": [
+    "01_jharkhand_ror_form.png",
+    "02_jharkhand_register2.png",
+    "03_bhoonaksha_home.png",
+    "05_bhoonaksha_parcels.png",
+    "06_bhoonaksha_plot_selected.png",
+    "12_bhoonaksha_lekhpal.png"
+  ],
+  "shots": [
+    {
+      "filename": "01_jharkhand_ror_form.png",
+      "url": "https://jharbhoomi.jharkhand.gov.in/MISROR/ROR",
+      "screen_state": "unreachable",
+      "purpose": "The citizen needs to know the administrative structure (District, Anchal, Mauja, Khata, khatadhari name, captcha) before reaching the record.",
+      "notes": "Official RoR search page did not load. Not fabricated. Public page title when reachable: \u0905\u092a\u0928\u093e \u0916\u093e\u0924\u093e \u0926\u0947\u0916\u0947 / View your account. Re-run `npm run capture` from an India network to fill this still.",
+      "captured": false,
+      "resolution": null
+    },
+    {
+      "filename": "02_jharkhand_register2.png",
+      "url": "https://jharbhoomi.jharkhand.gov.in/MISROR_REG2/Plot_Tran_Hist",
+      "screen_state": "unreachable",
+      "purpose": "What happened to this land over time? Register-II / plot transaction history.",
+      "notes": "Official Register-II / khesra-wise history page did not load. Not fabricated. Public page asks for District, Anchal, Halka, Mauja, Khata, Khesra, captcha. Re-run from an India network to fill this still.",
+      "captured": false,
+      "resolution": null
+    },
+    {
+      "filename": "03_bhoonaksha_home.png",
+      "url": "https://bhunaksha.vercel.app/?lang=en#4.6/22.5/79",
+      "screen_state": "Citizen landing map, default clean India view. Search closed. Lekhpal desk not opened.",
+      "purpose": "Appears immediately after: What if we started with the land itself?",
+      "notes": "Live default boot. Map/Satellite/Labels, See India, measure, tools, Lekhpal desk link all visible. IP is outside India so the prototype stays on the national frame.",
+      "captured": true,
+      "resolution": {
+        "width": 1920,
+        "height": 1080
+      }
+    },
+    {
+      "filename": "04_bhoonaksha_search.png",
+      "url": "https://bhunaksha.vercel.app/?lang=en#4.6/22.5/79",
+      "screen_state": "Search opened and focused. Placeholder: Village, city, plot, or DIGIPIN. Near me suggestion visible. No query submitted.",
+      "purpose": "Citizen can start with something they know rather than the full government hierarchy.",
+      "notes": "Did not submit a search just to populate results.",
+      "captured": true,
+      "resolution": {
+        "width": 1920,
+        "height": 1080
+      }
+    },
+    {
+      "filename": "05_bhoonaksha_parcels.png",
+      "url": "https://bhunaksha.vercel.app/?sat=1&lang=en#16.35/23.458/85.102",
+      "screen_state": "Satellite + live JSAC cadastral parcel boundaries near Mandar, Ranchi district. Plot numbers visible. NH visible. No plot selected.",
+      "purpose": "Land appears on familiar geography. One of the most important stills.",
+      "notes": "Zoomed until individual plots are readable. Parcel layer is the live prototype tile source, not a redraw.",
+      "captured": true,
+      "resolution": {
+        "width": 1920,
+        "height": 1080
+      }
+    },
+    {
+      "filename": "06_bhoonaksha_plot_selected.png",
+      "url": "http://127.0.0.1:18421/?sat=1#16.8/23.453525/85.099717",
+      "screen_state": "Survey no. 23 selected. Plot card includes Then Raiyati and Today Gair Mazarua in the same fact grid as Area and DIGIPIN.",
+      "purpose": "Which piece of land is ours?",
+      "notes": "Captured from the local UI change (not yet on vercel). Family land status is a plot-card fact, not a separate slide. Note under the facts: Our family's land — not a live Record of Rights.",
+      "captured": true,
+      "resolution": {
+        "width": 1920,
+        "height": 1080
+      }
+    },
+    {
+      "filename": "07_bhoonaksha_plot_card.png",
+      "url": "http://127.0.0.1:18421/?sat=1#16.8/23.453525/85.099717",
+      "screen_state": "Plot card fact grid: Then / Today sit beside Survey no., Area, DIGIPIN, Khata, Holder, Kisam.",
+      "purpose": "Actions and description items around the selected plot, including family land class.",
+      "notes": "Today is accent-colored. Empty Khata/Holder/Kisam remain dashes. Not a fabricated RoR.",
+      "captured": true,
+      "resolution": {
+        "width": 1920,
+        "height": 1080
+      }
+    },
+    {
+      "filename": "08_bhoonaksha_measure.png",
+      "url": "https://bhunaksha.vercel.app/?sat=1&lang=en#17/23.453525/85.099717",
+      "screen_state": "Live measure tool: vertices on the map, 206 m / 4584 m\u00b2 with bigha, biswa, acre, hectare.",
+      "purpose": "What are the actual boundaries and how large is it?",
+      "notes": "Used the real citizen measure control. Sketch is a measurement on the live map, not a fake survey extract.",
+      "captured": true,
+      "resolution": {
+        "width": 1920,
+        "height": 1080
+      }
+    },
+    {
+      "filename": "09_bhoonaksha_ror.png",
+      "url": "https://bhunaksha.vercel.app/?sat=1&lang=en#16.8/23.453525/85.099717",
+      "screen_state": "Plot card for Survey no. 23 with Official RoR link, plus the live toast: No public data for this yet. Coming when a state opens it.",
+      "purpose": "The plot is the anchor from which the citizen reaches the record.",
+      "notes": "Opened Record of Rights from the tools menu on a selected plot. Did not fabricate an RoR. Official RoR is a link out to the state portal.",
+      "captured": true,
+      "resolution": {
+        "width": 1920,
+        "height": 1080
+      }
+    },
+    {
+      "filename": "10_bhoonaksha_map_copy.png",
+      "url": "https://bhunaksha.vercel.app/?sat=1&lang=en#16.8/23.453525/85.099717",
+      "screen_state": "Get map copy print layout: satellite + parcels on top, plot facts below, chrome hidden by the product print stylesheet.",
+      "purpose": "Map copy from the selected plot.",
+      "notes": "Clicking Get map copy calls window.print(). This still is that print media layout, not a reconstructed PDF.",
+      "captured": true,
+      "resolution": {
+        "width": 1920,
+        "height": 1080
+      }
+    },
+    {
+      "filename": "11_bhoonaksha_share.png",
+      "url": "https://bhunaksha.vercel.app/?sat=1&lang=en#16.8/23.453525/85.099717",
+      "screen_state": "Send to bank clicked. Live toast: Bank pack queued. A Record of Rights still needs a state to join.",
+      "purpose": "Sharing / send-to-bank interaction as it exists in the current prototype.",
+      "notes": "Functional as a queued-pack toast. No fake bank portal.",
+      "captured": true,
+      "resolution": {
+        "width": 1920,
+        "height": 1080
+      }
+    },
+    {
+      "filename": "12_bhoonaksha_lekhpal.png",
+      "url": "https://bhunaksha.vercel.app/lekpal.html?sat=1&lang=en#16.35/23.458/85.102",
+      "screen_state": "Lekhpal desk workspace: professional tool rail, Citizen map switch, satellite + cadastral parcels, catalogue/compare controls.",
+      "purpose": "The professional workflow remains. Citizen and Lekhpal are two interfaces around the same land.",
+      "notes": "Opened the live lekpal.html. Same Mandar / Ranchi district location as the citizen sequence.",
+      "captured": true,
+      "resolution": {
+        "width": 1920,
+        "height": 1080
+      }
+    },
+    {
+      "filename": "13_bhoonaksha_lekhpal_plot.png",
+      "url": "http://127.0.0.1:18421/lekpal.html?sat=1#16.8/23.453525/85.099717",
+      "screen_state": "Lekhpal identify with the same Then / Today fact rows on the professional inspector.",
+      "purpose": "Split-screen: citizen experience | professional experience. Same land, different needs.",
+      "notes": "Family land facts use the shared Passport plot card on the Lekhpal desk.",
+      "captured": true,
+      "resolution": {
+        "width": 1920,
+        "height": 1080
+      }
+    },
+    {
+      "filename": "14_bhoonaksha_india.png",
+      "url": "https://bhunaksha.vercel.app/?lang=en#4.6/22.5/79",
+      "screen_state": "See India \u2014 widest national map from the live citizen control.",
+      "purpose": "Final zoom-out: One map for India.",
+      "notes": "Clicked the real See India button.",
+      "captured": true,
+      "resolution": {
+        "width": 1920,
+        "height": 1080
+      }
+    },
+    {
+      "filename": "15_family_land_status_story.png",
+      "url": "http://127.0.0.1:18421/?sat=1#16.8/23.453525/85.099717",
+      "screen_state": "Same plot card as 07: Then Raiyati and Today Gair Mazarua as ordinary description items.",
+      "purpose": "Family land-status story beat, now inside the product UI.",
+      "notes": "No longer a separate presentation slide. Caption under the facts states this is the family account, not a live RoR.",
+      "captured": true,
+      "resolution": {
+        "width": 1920,
+        "height": 1080
+      }
+    }
+  ],
+  "product_repo": "https://github.com/saurabh4269/bhoonaksha",
+  "product_live": "https://bhunaksha.vercel.app/",
+  "folder": "images"
+}
