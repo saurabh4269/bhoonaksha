@@ -42,6 +42,18 @@ vercel.json         cache headers
 
 Cache-bust query is `?v=` on script and CSS links. Bump it when shipping.
 
+## Architecture
+
+How the live app is wired, then how this tree was built and shipped.
+
+![Bhoonaksha runtime](docs/architecture/runtime.png)
+
+Left to right: two pages on Vercel, MapLibre in the browser, open tiles/APIs. Translation strip is the only server call (`api/translate.js` → Sarvam). RoR is a door, not a database.
+
+![How Bhoonaksha was built](docs/architecture/build.png)
+
+Who → this tree (plain HTML/CSS/JS) → open tiles and UX refs (not their data) → `npx vercel --prod` and `saurabh4269/bhoonaksha`.
+
 ## Cadastral tiles
 
 Keyless MVT from indianopenmaps, drawn after closer zoom:
