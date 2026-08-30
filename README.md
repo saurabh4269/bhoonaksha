@@ -4,9 +4,9 @@ Static web map for Indian cadastral plots. No bundler, no framework.
 
 Live: https://bhunaksha.vercel.app
 
-![Bhoonaksha container architecture](docs/architecture/runtime.png)
+![Bhoonaksha system architecture](docs/architecture/runtime.png)
 
-Browser SPA (MapLibre + IIFEs) loads static HTML/CSS/JS from Vercel, then pulls raster/vector tiles and MVT from open APIs. The only server call is `POST /api/translate.js` (`SARVAM_API_KEY` stays on the host); RoR is an outbound link, not a scrape.
+The map runs in the browser (citizen and Lekhpal pages) on a Vercel static origin plus one translate function. Basemap, labels, terrain, and cadastral tiles come from open APIs; state RoR is a hyperlink off the plot card, not a scrape.
 
 
 ## Stack
