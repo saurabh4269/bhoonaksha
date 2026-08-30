@@ -125,7 +125,13 @@ window.I18N = {
     demoKhata: "— demo —",
     demoKisam: "— demo —",
     demoVillage: "Example village",
-    demoDistrict: "Example district"
+    demoDistrict: "Example district",
+    familyLand: "Our family's land",
+    then: "Then",
+    today: "Today",
+    raiyati: "Raiyati",
+    gairMazarua: "Gair Mazarua",
+    familyLandNote: "Our family's land — not a live Record of Rights."
   },
   as: {
     searchPh: "গাঁও, চহৰ, বা ডিআইজিপিন",
@@ -455,7 +461,13 @@ window.I18N = {
     compareHint: "सड़क के साथ उपग्रह",
     verticesHint: "भूखंड के कोने",
     borderHint: "किनारे की लंबाई",
-    sizeHint: "क्षेत्रफल से रंग"
+    sizeHint: "क्षेत्रफल से रंग",
+    familyLand: "हमारी ज़मीन",
+    then: "तब",
+    today: "आज",
+    raiyati: "रैयती",
+    gairMazarua: "गैरमजरूआ",
+    familyLandNote: "हमारी ज़मीन — यह जीवित अधिकार अभिलेख नहीं है।"
   },
   kn: {
     searchPh: "ಗ್ರಾಮ, ಪಟ್ಟಣ ಅಥವಾ ಡಿಜಿಪಿಐಎನ್",

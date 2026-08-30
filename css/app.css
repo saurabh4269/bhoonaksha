@@ -470,6 +470,7 @@ h2 { font-family: var(--serif); font-size: 26px; margin: 0 0 6px; }
 }
 .facts.passport { margin-bottom: 8px; }
 .facts.passport div.empty dd { color: var(--ink-soft); font-weight: 500; }
+.facts .land-now dd { color: var(--accent); }
 .pass-links {
   display: flex;
   flex-wrap: wrap;
