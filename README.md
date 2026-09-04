@@ -2,7 +2,7 @@
 
 Static web map for Indian cadastral plots. No bundler, no framework.
 
-Live: https://bhunaksha.vercel.app
+Live: https://bhoonaksha.vercel.app
 
 ![Bhoonaksha system architecture](docs/architecture/runtime.png)
 
@@ -67,18 +67,16 @@ Any static server also works for the map itself (`python3 -m http.server`). Tran
 
 ## Deploy
 
-Pushes land on https://bhoonaksha-plot-card.vercel.app.
-
-Day to day (until the GitHub owner imports this repo in Vercel, or runs the setup script below):
+Production: https://bhoonaksha.vercel.app  
+Vercel project `bhoonaksha` is linked to this repo (`saurabh4269/bhoonaksha`). Pushes to `main` deploy production.
 
 ```bash
 git push origin main
-./scripts/sync-fork.sh
+# or one-off from a checkout:
+vercel deploy --prod
 ```
 
-The second command fast-forwards [shiwani42/bhoonaksha](https://github.com/shiwani42/bhoonaksha), which is what Vercel watches. Pushing that fork’s `main` directly also deploys.
-
-**GitHub Actions** (templates in `ci/`). A repo admin runs this once (`gh` with the `workflow` scope + `vercel login`):
+**GitHub Actions** (optional; templates in `ci/`). A repo admin runs this once (`gh` with the `workflow` scope + `vercel login`):
 
 ```bash
 ./scripts/enable-vercel-github-ci.sh
@@ -86,14 +84,4 @@ The second command fast-forwards [shiwani42/bhoonaksha](https://github.com/shiwa
 
 That copies the workflows into `.github/workflows/` and writes the `VERCEL_TOKEN` secret. After that, every push to `main` and every pull request deploys from Actions.
 
-**Vercel Git (live now).** Vercel will not attach a *personal* GitHub repo unless the **owner** imports it. The plot-card project is linked to the collaborator fork [shiwani42/bhoonaksha](https://github.com/shiwani42/bhoonaksha). Pushing that fork’s `main` deploys production. After a push here, sync the fork (and the deploy) with:
-
-```bash
-./scripts/sync-fork.sh
-```
-
-The owner can skip the fork by importing `saurabh4269/bhoonaksha` in the Vercel dashboard.
-
 Set `SARVAM_API_KEY` on the Vercel project if you want live translation. Do not commit `.vercel`, `bin-cloudflared`, or `data/*.sqlite`.
-
-`bhunaksha.vercel.app` is a different Vercel account. Import this GitHub repo there (or re-alias after a prod deploy) if that hostname should follow `main`.
